@@ -133,9 +133,9 @@
     ㄴ 함수가 일반 함수로 호출되면 함수 객체의 내부 메서드 [[Call]]가 호출
     ㄴ new 연산자와 함께 호출되면 [[Construct]] 내부 메서드를 호출
 
-  callable: [[Call]] 내부 메서드를 갖는 함수 객체 // 모든 함수 객체는 호출 할 수 있음
-  constructor: [[Construct]] 내부 메서드를 갖는 함수 객체 // 생성자 함수 객체만 가능
-  non-constructor: [[Construct]] 내부 메서드를 갖지 않는 함수 객체
+  callable: [[Call]] 호출할 수 있는 객체 // 모든 함수 객체는 호출 할 수 있음
+  constructor: [[Construct]] 생성자 함수로 호출할 수 있는 함수 // 일반 함수 즉 함수 표현식, 함수 선언문으로 정의된 함수
+  non-constructor: [[Construct]] 생성자 함수로 호출할 수 없는 함수 // 화살표 함수
 
   즉, 모든 함수 객체는 부를 수 있지만 모두 생성자 함수로 호출할 수 있지 않는다
 
