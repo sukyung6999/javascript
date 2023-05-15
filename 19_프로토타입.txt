@@ -105,10 +105,13 @@
 
   > 모든 객체는 하나의 prototype을 가짐
   > 모든 prototype은 생성자 함수와 연결되어 있음
-  > 자신의 내부 슬롯 [[prototype]]에 직접 접근할 수 없지만, __proto__ 접근자 프로퍼티를 이용해서 간접적으로 접근하고
-    내부 슬롯 [[prototype]]이 가리키는 prototype에 접근할 수 있음
+  > __proto__ 접근자 프로퍼티를 통해 내부 슬롯 [[prototype]]이 가리키는 prototype에 접근할 수 있음
+  > 프로토타입의 constructor 프로퍼티를 통해 자신의 생성자 함수에 접근할 수 있고,
+  반대로 생성자 함수는 자신의 프로토타입 프로퍼티를 통해 프로토타입에 접근할 수 있음
 
   ======================================================
+
+  [__proto__ 접근자 프로퍼티]
 
   [1] __proto__ 는 접근자 프로퍼티 
     접근자 프로퍼티 속성에는 [Get], [Set] 접근자 함수들이 있고,
@@ -126,10 +129,13 @@
 
     console.log(obj.__proto__); // {name: 'one'}
     
+    <<<< 예시 끝
+    
   
   [2] __proto__ 접근자 프로퍼티는 상속을 통해 사용
       ㄴ __proto__ 접근자 프로퍼티는 객체가 소유하는 게 아니라, Object.prototype의 프로퍼티임!!!!!!!!!!!!!!!!!!!!!!!
       ㄴ 예시 시작 >>>>
+
         const person = {name: 'one'};
 
         console.log(person.hasOwnProperty('__proto__')); // false 즉, person 객체는 __proto__ 접근자 프로퍼티를 소유하지 않음
@@ -137,15 +143,74 @@
         console.log(object.getOwnPropertyDescriptor(Object.prototype, '__proto__')) // 모든 객체의 프로토타입 객체인 Object.prototype의 접근자 프로퍼티임
 
         console.log({}.prototype === Object.prototype); // true 즉, 모든 객체는 Object.prototype의 프로퍼티를 상속받아 사용할 수 있음
+        
+        <<<< 예시 끝
 
   [3] __proto__ 접근자 프로퍼티를 이용해서 prototype에 접근하는 이유?
       ㄴ 상호 참조에 의해 프로토타입 체인이 생성되는 것을 방지하기 위해서
+      ㄴ 프로토타입 체인은 단방향 링크드 리스트로 구현되어야 함
+      ㄴ 순환 참조하게 되면 프로토타입 체인의 종점이 없기 때문에 무조건적으로 아무런 체크없이 프로토타입을 교체할 수 없도록
+
 
       예시 시작 >>>>
+
       const parent = {};
       const child = {};
 
       parent.__proto__ = child;
       child.__proto__ = parent;
-
       
+      <<<< 예시 끝
+
+  [4] 코드 내에서 __proto__ 접근자 프로퍼티를 사용하는 것을 권장하지 않음
+      ㄴ 직접 상속을 통해 프로토타입을 상속받지 않는 객체를 생성할 수 있기 때문에
+      ㄴ Object.create()로 생성한 객체의 경우 
+        - 프로토타입의 참조를 얻고 싶을땐 : getPrototypeOf 메서드 사용
+        - 교체하고 싶을땐 : setPrototypeOf 메서드 사용
+
+      예시 시작 >>>>>
+
+      const obj = Object.create(null);
+      console.log(obj.__proto__); // undefined
+      
+      <<<< 예시 끝
+  
+  ======================================================
+
+  [함수 객체의 prototype 프로퍼티]
+
+  함수 객체만이 소유하는 prototype 프로퍼티는 
+  생성자 함수가 생성할 인스턴스의 프로토타입을 가리킴
+  
+  단, 화살표 함수랑 축약표현 메서드는 non-constructor로서 
+  prototype 프로퍼티를 소유하지 않음 
+
+  예시 시작 >>>>
+
+  (function () {}).hasOwnProperty('prototype'); // true, 함수 객체는 prototype 프로퍼티를 가짐
+  {}.hasOwnProperty('prototype'); // false, 일반 객체는 prototype 프로퍼티를 갖지 않음
+
+  (화살표 함수인 경우)
+  const Person = name => {
+    this.name = name;
+  }
+
+  console.log(Person.hasOwnProperty('property')); // false
+
+  (축약 표현 메서드인 경우)
+  const obj = {
+    function foo () {
+
+    }
+  }
+
+  console.log(obj.foo.hasOwnProperty('property')); // false
+
+  <<<< 예시 끝
+
+  결국 모든 객체의 __proto__ 접근자 프로퍼티와
+  함수 객체의 프로토타입의 프로퍼티가 가리키는 "프로토타입은 동일하다"
+
+  그러나,
+
+  프로퍼티를 사용하는 주체가 다름?
