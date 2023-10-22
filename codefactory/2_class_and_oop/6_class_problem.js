@@ -120,33 +120,44 @@ class Idol{
 }
 
 class MaleIdol extends Idol{
-    name;
-    year;
-
-    constructor(name, year) {
-        super(name, year)
-    }
-    
     sing() {
         return console.log(`${this.name}이 노래를 합니다.`)
     }
 }
 
 class FemaleIdol extends Idol{
-    name;
-    year;
-
-    constructor(name, year) {
-        super(name, year)
-    }
-    
     dance() {
         return console.log(`${this.name}이 춤을 춥니다.`)
     }
 }
 
 
-const cIveGroup = iveMembers.map((v) => {
-    return new FemaleIdol(v.name);
-})
-console.log(cIveGroup);
+const cIveMembers = iveMembers.map((v) => new FemaleIdol(v.name, v.year))
+// console.log(cIveMembers);
+
+const cBtsMembers = btsMembers.map((v) => new MaleIdol(v.name, v.year))
+// console.log(cBtsMembers);
+
+const cFemaleGroup = new IdolGroup('ive', cIveMembers);
+// console.log(cFemaleGroup);
+
+const cMaleGroup = new IdolGroup('bts', cBtsMembers);
+// console.log(cMaleGroup);
+
+const cKorea = new Country('korea', [cFemaleGroup, cMaleGroup]);
+// console.log(cKorea);
+
+const koreaIdol = new Country(
+    'korea', 
+    [
+        new IdolGroup(
+            'ive',
+            iveMembers.map((v) => v.name)
+        ),
+        new IdolGroup(
+            'bts',
+            btsMembers.map((v) => v.name)
+        ),
+    ]
+)
+console.log(koreaIdol);
