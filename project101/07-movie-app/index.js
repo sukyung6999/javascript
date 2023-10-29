@@ -64,7 +64,6 @@ const createBlock = ({
     h3.innerText = `${original_title} (${title})`;
     date.innerText = release_date;
     rate.innerText = `🏆${vote_average}`;
-    console.log(poster_path);
 
     poster.addEventListener('click', movieDetail);
 
