@@ -11,12 +11,6 @@ const lists = {
     done: doneList,
 }
 
-const updateList = (id) => {
-    lists[id].forEach((todo) => {
-        createElement(id, todo);
-    })
-}
-
 const addItem = () => {
     const id = to.id;
 
@@ -24,24 +18,27 @@ const addItem = () => {
         'id': newTodo.id,
         'text': newTodo.innerText
     });
-    updateList(id);
+
+    createElement(id, {
+        'id': newTodo.id,
+        'text': newTodo.innerText
+    })
 }
 
 const removeItem = () => {
     const id = from.id;
-    const list = document.querySelector(`#${id}`);
-    // list.remove();
 
     lists[id] = lists[id].filter((item) => item.id !== newTodo.id);
-    updateList(id);
 }
 
-const dragEnd = () => {
+const dragEnd = (event) => {
+    event.target.remove();
     removeItem();
     addItem();
 }
 
 const dragOver = (event) => {
+    event.preventDefault();
     if (event.target.className === 'list') {
         to = event.target;
     } else {
