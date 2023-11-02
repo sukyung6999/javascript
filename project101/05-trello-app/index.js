@@ -43,7 +43,7 @@ const dragOver = (event) => {
 
 const dragStart = (event) => {
     from = event.target.parentElement.id;
-    to = event.target.parentElement.id;
+    // to = from;
 }
 
 const dragEnd = (event) => {
