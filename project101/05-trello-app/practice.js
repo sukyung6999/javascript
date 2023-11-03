@@ -1,7 +1,7 @@
 const form = document.querySelector('form');
 const blocks = document.querySelectorAll('.list');
 
-let from, to, newTodo;
+let from, to;
 
 const todoList = [], doingList = [], doneList = [];
 
@@ -11,44 +11,37 @@ const lists = {
     done: doneList,
 }
 
-const addItem = () => {
-    const id = to.id;
-
-    lists[id].push({
-        'id': newTodo.id,
-        'text': newTodo.innerText
-    });
-
-    createElement(id, {
-        'id': newTodo.id,
-        'text': newTodo.innerText
-    })
-}
-
-const removeItem = () => {
-    const id = from.id;
-
-    lists[id] = lists[id].filter((item) => item.id !== newTodo.id);
+const saveList = (listId, list) => {
+    localStorage.setItem(listId, JSON.stringify(lists[listId]));
 }
 
 const dragEnd = (event) => {
+    const {id} = event.target;
+
     event.target.remove();
-    removeItem();
-    addItem();
+    
+    lists[from] = lists[from].filter((item) => {
+        if(item.id !== id) {
+            return item;
+        } else {
+            createElement(to, item);
+        }
+    });
+    saveList(from, lists[from]);
 }
 
 const dragOver = (event) => {
     event.preventDefault();
-    if (event.target.className === 'list') {
-        to = event.target;
+    const {id} = event.target;
+    if (Object.keys(lists).includes(id)) {
+        to = id;
     } else {
         to = from;
     }
 }
 
 const dragStart = (event) => {
-    from = event.target.parentElement;
-    newTodo = event.target;
+    from = event.target.parentElement.id;
 }
 
 const createElement = (type, todo) => {
@@ -61,11 +54,11 @@ const createElement = (type, todo) => {
     item.innerText = todo.text;
 
     list.append(item);
+    lists[type].push(todo);
+    saveList(type, todo);
     
     item.addEventListener('dragstart', dragStart);
     item.addEventListener('dragend', dragEnd);
-
-    localStorage.setItem(type, JSON.stringify(todo));
 }
 
 const createTodo = (event) => {
@@ -76,7 +69,7 @@ const createTodo = (event) => {
         'id': uuidv4(),
         'text': input.value
     }
-    lists['todo'].push(todo);
+    
     createElement('todo', todo);
     input.value = '';
 }
@@ -87,11 +80,27 @@ blocks.forEach((block) => {
 })
 
 const init = () => {
-    const myList = lists.forEach((list) => {
-        JSON.parse(localStorage.getItem(list.key, list.value));
-    })
-    lists = myList;
-    lists.forEach((list) => {
-        createElement(list.key, list.value);
-    })
+    const myTodoList = JSON.parse(localStorage.getItem('todo'));
+    const myDoingList = JSON.parse(localStorage.getItem('doing'));
+    const myDoneList = JSON.parse(localStorage.getItem('done'));
+
+    if (myTodoList) {
+        myTodoList.forEach((item) => {
+            createElement('todo', item);
+            lists['todo'].push(item);
+        })
+    }
+    if (myDoingList) {
+        myDoingList.forEach((item) => {
+            createElement('doing', item);
+            lists['doing'].push(item);
+        })
+    }
+    if (myDoneList) {
+        myDoneList.forEach((item) => {
+            createElement('done', item);
+            lists['done'].push(item);
+        })
+    }
 }
+init();
