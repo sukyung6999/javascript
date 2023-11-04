@@ -102,6 +102,7 @@ const getPopularMovies = () => {
     .then(({results}) => {
         results.forEach((movie) => {
             createBlock(movie);
+            console.log(movie);
         })
     });
 }
