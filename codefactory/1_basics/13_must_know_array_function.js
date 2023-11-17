@@ -94,7 +94,7 @@ console.log(numbers);
 console.log(iveMembers.map((x) => x));
 console.log(iveMembers.map((x) => `아이브: ${x}`));
 
-console.log(iveMembers.map((x) => {
+console.log('heyhey',iveMembers.map((x) => {
     if (x === '안유진') {
         return `아이브: ${x}`
     } else {
@@ -107,7 +107,7 @@ console.log(iveMembers);
 // filter()
 numbers = [1,8,7,6,3];
 
-console.log(numbers.filter((x) => true));
+console.log('heyhey',numbers.filter((x) => true));
 console.log(numbers.filter((x) => false));
 
 console.log(numbers.filter((x) => x % 2 === 0));
@@ -119,4 +119,4 @@ console.log(numbers.find((x) => x % 2 === 0));
 console.log(numbers.findIndex((x) => x % 2 === 0));
 
 // reduce()
-console.log(numbers.reduce(((p, n) => p + n,0)));
+console.log('heyhey',numbers.reduce(((p, n) => p + n)));
